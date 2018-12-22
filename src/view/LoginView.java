@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -197,5 +198,7 @@ public class LoginView extends JPanel implements ActionListener {
 		} else {
 			System.err.println("ERROR: Action command not found (" + e.getActionCommand() + ")");
 		}
-	}
+		
 }
+}
+

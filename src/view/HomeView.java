@@ -1,8 +1,14 @@
 package view;
 
+import java.applet.Applet;
+import controller.ViewManager;
 import java.awt.BorderLayout;
 import java.awt.Button;
+import java.awt.Container;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Panel;
+import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -23,6 +29,9 @@ public class HomeView extends JPanel implements ActionListener {
 	private JButton depositButton;
 	private JButton withdrawButton;
 	private JButton closeButton;
+	private JButton logoutButton;
+	private JLabel headerLabel;
+
 	
 	/**
 	 * Constructs an instance (or objects) of the HomeView class.
@@ -53,8 +62,9 @@ public class HomeView extends JPanel implements ActionListener {
 		// this is a placeholder for this view and should be removed once you start
 		// building the HomeView.
 		
-		this.add(new javax.swing.JLabel("HomeView", javax.swing.SwingConstants.CENTER));
-		
+		//this.add(new javax.swing.JLabel("HomeView", javax.swing.SwingConstants.BOTTOM ));
+		//this.add(new javax.swing.JLabel("HomeView", javax.swing.SwingConstants.BOTTOM));
+
 		// TODO
 		//
 		// this is where you should build the HomeView (i.e., all the components that
@@ -63,52 +73,13 @@ public class HomeView extends JPanel implements ActionListener {
 		// feel free to use my layout in LoginView as an example for laying out and
 		// positioning your components.
 	}
-	
-	private void initOption() {
-		JLabel label = new JLabel("What Would You Like To Do?");
-		label.setBounds(10, 50, 60, 100);
-		this.add(label);
+
+	private void initWithDraw() {
+		// TODO Auto-generated method stub
 		
-		/*withdrawButton = new JButton("Withdraw");
-	//withdrawButton.addActionListener(this);
-		//withdrawButton.setBounds(205, 100, 200, 35);
-		this.add(withdrawButton);
-		
-		depositButton = new JButton("Deposit");
-		//depositButton.setBounds(205, 180, 200, 35);
-		//depositButton.addActionListener(this);
-		this.add(depositButton);
-		
-		closeButton = new JButton("Exit ATM");
-		//closeButton.setBounds(205, 180, 200, 35);
-		//closeButton.addActionListener(this);
-		this.add(closeButton);*/
-		
-		JPanel label1 = new JPanel();
-        withdrawButton = new JButton("Withdraw");
-        depositButton = new JButton("Deposit");
-        closeButton = new JButton("Exit ATM");
-		
-       /* label1.add(withdrawButton, BorderLayout.NORTH);
-        label1.add(depositButton, BorderLayout.CENTER);
-        label1.add(closeButton, BorderLayout.SOUTH);*/
-      
-		setLayout(new BorderLayout());
-		label1.add(new Button("Withdraw"), BorderLayout.NORTH);  // Same as p.add(new TextArea(), BorderLayout.CENTER);
-        label1.add(new Button("Deposit"), BorderLayout.CENTER);
-        label1.add(new Button("Exit ATM"), BorderLayout.SOUTH);
-        
-        this.add(withdrawButton);
-        this.add(depositButton);
-        this.add(closeButton);
-        //this.setVisible(true);
 	}
 
 	private void initTransfer() {
-		// TODO Auto-generated method stub
-	}
-
-	private void initWithDraw() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -118,6 +89,34 @@ public class HomeView extends JPanel implements ActionListener {
 		
 	}
 
+	private void initOption() {
+		//this.add(new javax.swing.JLabel("HomeView", javax.swing.SwingConstants.BOTTOM));
+		JLabel label = new JLabel("What Would You Like To Do?");
+		//label.setBounds(87, 21, 246, 74);
+		this.add(label);
+		
+		setLayout(new FlowLayout(FlowLayout.CENTER));
+
+        Button depositButton = new Button("Deposit");
+        add(depositButton);
+        
+        Button withdrawButton = new Button("Withdraw");
+        add(withdrawButton);
+        
+        Button closeButton = new Button("Logout");
+        closeButton.addActionListener(this);
+        add(closeButton);
+	}
+        
+    	/*Panel p = new Panel();
+	    p.setLayout(new BorderLayout());
+	    p.add(new Button("Okay"), BorderLayout.SOUTH);
+	    
+	    Panel p2 = new Panel();
+	    p2.setLayout(new BorderLayout());
+	    p2.add(new TextArea());*/
+	   
+	    	//public void init() {
 	/*
 	 * HomeView is not designed to be serialized, and attempts to serialize will throw an IOException.
 	 * 
@@ -139,7 +138,13 @@ public class HomeView extends JPanel implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+		Object source = e.getSource();
+		if (source.equals(closeButton)) {
+    	manager.switchTo(ATM.LOGIN_VIEW);
+    	//pinField = null;
+		} else {
+			manager.switchTo(ATM.LOGIN_VIEW);
+    }
 		// TODO
 		//
 		// this is where you'll setup your action listener, which is responsible for
@@ -148,4 +153,4 @@ public class HomeView extends JPanel implements ActionListener {
 		//
 		// feel free to use my action listener in LoginView.java as an example.
 	}
-}
+	}
