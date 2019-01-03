@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -28,10 +29,20 @@ import controller.ViewManager;
 @SuppressWarnings("serial")
 public class CreateView extends JPanel implements ActionListener {
 	
-	private JTextField accountField;
+	//private JTextField accountField;
 	private ViewManager manager;
 	private JButton creatorButton;
 	private JButton cancelButton;
+	private JTextField first_name;
+	private JTextField last_name;
+	private JTextField dob;
+	private JTextField phone_number;
+	private JTextField address;
+	private JTextField city;
+	private JComboBox state;
+	private JTextField postal_code;
+	private JPasswordField pinField;
+	
 	/**
 	 * Constructs an instance (or object) of the CreateView class.
 	 * 
@@ -52,8 +63,18 @@ public class CreateView extends JPanel implements ActionListener {
 	 */
 	
 	private void initialize() {
-		initOption();
+		//initOption();
 		initButtons();
+		initfirst_name();
+		initlast_name();
+		initdob();
+		initpostal_code();
+		initcity();
+		initstate();
+		initphone_number();
+		initaddress();
+		initPinField();
+		
 		//initUpdate();
 		
 		// TODO
@@ -72,7 +93,145 @@ public class CreateView extends JPanel implements ActionListener {
 		// positioning your components.
 	}
 	
+	private void initfirst_name() {
+		// TODO Auto-generated method stub
+	JLabel label = new JLabel("First Name:", SwingConstants.RIGHT);
+	label.setBounds(100, 100, 95, 35);
+	label.setLabelFor(first_name);
+	label.setFont(new Font("DialogInput", Font.BOLD, 14));
+
+	first_name = new JTextField(20);
+	first_name.setBounds(205, 100, 200, 35);
+
+	this.add(label);
+	this.add(first_name);
+	}
 	
+	private void initlast_name() {
+		// TODO Auto-generated method stub
+		JLabel label = new JLabel("Last Name:", SwingConstants.RIGHT);
+		label.setBounds(100, 90, 95, 35);
+		label.setLabelFor(last_name);
+		label.setFont(new Font("DialogInput", Font.BOLD, 14));
+
+		last_name = new JTextField(20);
+		last_name.setBounds(205, 100, 200, 35);
+
+		this.add(label);
+		this.add(last_name);
+	}
+	
+	private void initdob() {
+		// TODO Auto-generated method stub
+	JLabel label = new JLabel("Date of Birth:", SwingConstants.RIGHT);
+	label.setBounds(100, 80, 95, 35);
+	label.setLabelFor(dob);
+	label.setFont(new Font("DialogInput", Font.BOLD, 14));
+
+	dob = new JTextField(20);
+	dob.setBounds(205, 100, 200, 35);
+
+	this.add(label);
+	this.add(dob);
+	}
+
+	private void initpostal_code() {
+		// TODO Auto-generated method stub
+		JLabel label = new JLabel("Postal Code:", SwingConstants.RIGHT);
+		label.setBounds(100, 70, 95, 35);
+		label.setLabelFor(postal_code);
+		label.setFont(new Font("DialogInput", Font.BOLD, 14));
+	
+		postal_code = new JTextField(20);
+		postal_code.setBounds(205, 100, 200, 35);
+	
+		this.add(label);
+		this.add(postal_code);
+	}
+
+	private void initcity() {
+		// TODO Auto-generated method stub
+		JLabel label = new JLabel("City:", SwingConstants.RIGHT);
+		label.setBounds(100, 60, 95, 35);
+		label.setLabelFor(city);
+		label.setFont(new Font("DialogInput", Font.BOLD, 14));
+
+		city = new JTextField(20);
+		city.setBounds(205, 100, 200, 35);
+
+		this.add(label);
+		this.add(city);
+	}
+
+	private void initstate() {
+		// TODO Auto-generated method stub
+		/*JLabel label = new JLabel("State:", SwingConstants.RIGHT);
+		label.setBounds(100, 50, 95, 35);
+		label.setLabelFor(state);
+		label.setFont(new Font("DialogInput", Font.BOLD, 14));
+
+		state = new JTextField(20);
+		state.setBounds(205, 100, 200, 35);
+
+		this.add(label);
+		this.add(state);*/
+		//JComboBox state = new JComboBox(stateStrings);
+		JLabel label = new JLabel("State:", SwingConstants.RIGHT);
+		//label.setBounds(100, 50, 95, 35);
+		//label.setLabelFor(state);
+		label.setFont(new Font("DialogInput", Font.BOLD, 14));
+		
+		String[] stateStrings = { "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MS", "MO", "MT", "NE", "NH", "NJ", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI","WY" };
+		@SuppressWarnings("unchecked")
+		JComboBox state = new JComboBox(stateStrings);
+		state.setBounds(205, 100, 200, 35);
+		this.add(state);
+		this.add(label);
+	}
+
+	private void initphone_number() {
+		// TODO Auto-generated method stub
+		JLabel label = new JLabel("Phone Number:", SwingConstants.RIGHT);
+		label.setBounds(100, 40, 95, 35);
+		label.setLabelFor(postal_code);
+		label.setFont(new Font("DialogInput", Font.BOLD, 14));
+
+		phone_number = new JTextField(20);
+		phone_number.setBounds(205, 100, 200, 35);
+
+		this.add(label);
+		this.add(phone_number);
+	}
+
+	private void initaddress() {
+		// TODO Auto-generated method stub
+		JLabel label = new JLabel("Address:", SwingConstants.RIGHT);
+		label.setBounds(100, 30, 95, 35);
+		label.setLabelFor(postal_code);
+		label.setFont(new Font("DialogInput", Font.BOLD, 14));
+
+		address = new JTextField(20);
+		address.setBounds(205, 100, 200, 35);
+
+		this.add(label);
+		this.add(address);
+	}
+
+	private void initPinField() {
+		// TODO Auto-generated method stub
+		JLabel label = new JLabel("PIN", SwingConstants.RIGHT);
+		label.setBounds(100, 20, 95, 35);
+		label.setLabelFor(pinField);
+		label.setFont(new Font("DialogInput", Font.BOLD, 14));
+		
+		pinField = new JPasswordField(20);
+		pinField.setBounds(50,500, 500,30);
+		
+		this.add(label);
+		this.add(pinField);
+	}
+	
+
 /*	private void initUpdate(Connection con, String dbName) {
 		// TODO Auto-generated method stub
 		Statement stmt = null;
@@ -111,6 +270,7 @@ public class CreateView extends JPanel implements ActionListener {
 
 	}*/
 
+
 	private void initButtons() {
 		// TODO Auto-generated method stub
 		Button creatorButton = new Button("Create Account:");
@@ -122,10 +282,10 @@ public class CreateView extends JPanel implements ActionListener {
         add(cancelButton);
 	}
 
-	private void initOption() {
+	/*private void initOption() {
 		// TODO Auto-generated method stub
-		 /*first_name = new JFrame("First Name:"); 
-		 add(first_name);*/
+		 first_name = new JFrame("First Name:"); 
+		 add(first_name);
 		
 		 
 		 //JTextField first_name = null, last_name = null, dob = null, phone_number = null, address = null, city = null, state = null, postal_code = null, pin = null;  
@@ -196,16 +356,17 @@ public class CreateView extends JPanel implements ActionListener {
 		 this.add(accountField);
 		 
 		 JLabel pin = new JLabel("Desired PIN:", SwingConstants.RIGHT);
-		 pin.setLabelFor(accountField);
+		 //pin.setLabelFor(accountField);
+		
 		 pin.setFont(new Font("DialogInput", Font.BOLD, 14));
 		// pin = new JPasswordField(20);
 		 pin.setBounds(50,500, 500,30);
-		 accountField = new JTextField(20);
+		 accountField = new JPasswordField(20);
 		 accountField.setBounds(205, 400, 200, 35);
 		 this.add(pin);
 		 this.add(accountField);
 		 
-		 /*this.add(first_name);
+		 this.add(first_name);
 		 this.add(last_name);
 		 this.add(dob);
 		 this.add(phone_number);
@@ -214,10 +375,10 @@ public class CreateView extends JPanel implements ActionListener {
 		 this.add(city);
 		 this.add(postal_code);
 		 this.add(pin);
-		 this.add(accountField);*/
+		 this.add(accountField);
 		 
 		 
-	}
+	}*/
 
 	/*
 	 * CreateView is not designed to be serialized, and attempts to serialize will throw an IOException.
