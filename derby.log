@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Thu Jan 03 11:51:04 EST 2019:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0168-14a0-1f83-00000e61c3f8 
+Thu Jan 03 14:34:21 EST 2019:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0168-1535-9cc2-00000e61b1a8 
 on database directory C:\Users\dfalana\git\graphical-atm\atm with class loader sun.misc.Launcher$AppClassLoader@2a139a55 
 Loaded from file:/C:/Users/dfalana/git/graphical-atm/lib/derby.jar
 java.vendor=Oracle Corporation

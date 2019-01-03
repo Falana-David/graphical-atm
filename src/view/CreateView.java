@@ -14,6 +14,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -23,6 +25,9 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import java.util.Calendar;
+import java.util.Date;
+
 
 import controller.ViewManager;
 
@@ -63,6 +68,7 @@ public class CreateView extends JPanel implements ActionListener {
 	 */
 	
 	private void initialize() {
+		this.setLayout(null);
 		//initOption();
 		initButtons();
 		initfirst_name();
@@ -110,12 +116,12 @@ public class CreateView extends JPanel implements ActionListener {
 	private void initlast_name() {
 		// TODO Auto-generated method stub
 		JLabel label = new JLabel("Last Name:", SwingConstants.RIGHT);
-		label.setBounds(100, 90, 95, 35);
+		label.setBounds(100, 140, 95, 35);
 		label.setLabelFor(last_name);
 		label.setFont(new Font("DialogInput", Font.BOLD, 14));
 
 		last_name = new JTextField(20);
-		last_name.setBounds(205, 100, 200, 35);
+		last_name.setBounds(205, 140, 200, 35);
 
 		this.add(label);
 		this.add(last_name);
@@ -124,26 +130,40 @@ public class CreateView extends JPanel implements ActionListener {
 	private void initdob() {
 		// TODO Auto-generated method stub
 	JLabel label = new JLabel("Date of Birth:", SwingConstants.RIGHT);
-	label.setBounds(100, 80, 95, 35);
+	label.setBounds(100, 180, 95, 35);
 	label.setLabelFor(dob);
 	label.setFont(new Font("DialogInput", Font.BOLD, 14));
 
 	dob = new JTextField(20);
-	dob.setBounds(205, 100, 200, 35);
+	dob.setBounds(205, 180, 200, 35);
 
 	this.add(label);
 	this.add(dob);
+	
+	 /*JXDatePicker picker = new JXDatePicker();
+     picker.setDate(Calendar.getInstance().getTime());
+     picker.setFormats(new SimpleDateFormat("dd.MM.yyyy"));
+
+     panel.add(picker);*/
+	
+	/*UtilDateModel model = new UtilDateModel();
+	JDatePanelImpl datePanel = new JDatePanelImpl(model);
+	JDatePickerImpl datePicker = new JDatePickerImpl(datePanel);
+	 
+	frame.add(datePicker);*/
+     
+     
 	}
 
 	private void initpostal_code() {
 		// TODO Auto-generated method stub
 		JLabel label = new JLabel("Postal Code:", SwingConstants.RIGHT);
-		label.setBounds(100, 70, 95, 35);
+		label.setBounds(100, 220, 95, 35);
 		label.setLabelFor(postal_code);
 		label.setFont(new Font("DialogInput", Font.BOLD, 14));
 	
 		postal_code = new JTextField(20);
-		postal_code.setBounds(205, 100, 200, 35);
+		postal_code.setBounds(205, 220, 200, 35);
 	
 		this.add(label);
 		this.add(postal_code);
@@ -152,12 +172,12 @@ public class CreateView extends JPanel implements ActionListener {
 	private void initcity() {
 		// TODO Auto-generated method stub
 		JLabel label = new JLabel("City:", SwingConstants.RIGHT);
-		label.setBounds(100, 60, 95, 35);
+		label.setBounds(100, 260, 95, 35);
 		label.setLabelFor(city);
 		label.setFont(new Font("DialogInput", Font.BOLD, 14));
 
 		city = new JTextField(20);
-		city.setBounds(205, 100, 200, 35);
+		city.setBounds(205, 260, 200, 35);
 
 		this.add(label);
 		this.add(city);
@@ -177,14 +197,15 @@ public class CreateView extends JPanel implements ActionListener {
 		this.add(state);*/
 		//JComboBox state = new JComboBox(stateStrings);
 		JLabel label = new JLabel("State:", SwingConstants.RIGHT);
-		//label.setBounds(100, 50, 95, 35);
+		label.setBounds(100, 50, 95, 35);
 		//label.setLabelFor(state);
 		label.setFont(new Font("DialogInput", Font.BOLD, 14));
 		
 		String[] stateStrings = { "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MS", "MO", "MT", "NE", "NH", "NJ", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI","WY" };
 		@SuppressWarnings("unchecked")
 		JComboBox state = new JComboBox(stateStrings);
-		state.setBounds(205, 100, 200, 35);
+		label.setBounds(100, 300, 95, 35);
+		state.setBounds(205, 300, 200, 35);
 		this.add(state);
 		this.add(label);
 	}
@@ -192,12 +213,12 @@ public class CreateView extends JPanel implements ActionListener {
 	private void initphone_number() {
 		// TODO Auto-generated method stub
 		JLabel label = new JLabel("Phone Number:", SwingConstants.RIGHT);
-		label.setBounds(100, 40, 95, 35);
+		label.setBounds(100, 340, 95, 35);
 		label.setLabelFor(postal_code);
 		label.setFont(new Font("DialogInput", Font.BOLD, 14));
 
 		phone_number = new JTextField(20);
-		phone_number.setBounds(205, 100, 200, 35);
+		phone_number.setBounds(205, 340, 200, 35);
 
 		this.add(label);
 		this.add(phone_number);
@@ -206,12 +227,12 @@ public class CreateView extends JPanel implements ActionListener {
 	private void initaddress() {
 		// TODO Auto-generated method stub
 		JLabel label = new JLabel("Address:", SwingConstants.RIGHT);
-		label.setBounds(100, 30, 95, 35);
+		label.setBounds(100, 380, 95, 35);
 		label.setLabelFor(postal_code);
 		label.setFont(new Font("DialogInput", Font.BOLD, 14));
 
 		address = new JTextField(20);
-		address.setBounds(205, 100, 200, 35);
+		address.setBounds(205, 380, 200, 35);
 
 		this.add(label);
 		this.add(address);
@@ -220,12 +241,12 @@ public class CreateView extends JPanel implements ActionListener {
 	private void initPinField() {
 		// TODO Auto-generated method stub
 		JLabel label = new JLabel("PIN", SwingConstants.RIGHT);
-		label.setBounds(100, 20, 95, 35);
+		label.setBounds(100, 420, 95, 35);
 		label.setLabelFor(pinField);
 		label.setFont(new Font("DialogInput", Font.BOLD, 14));
 		
 		pinField = new JPasswordField(20);
-		pinField.setBounds(50,500, 500,30);
+		pinField.setBounds(205, 420, 200, 35);
 		
 		this.add(label);
 		this.add(pinField);
