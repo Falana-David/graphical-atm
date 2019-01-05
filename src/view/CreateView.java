@@ -29,24 +29,37 @@ import java.util.Calendar;
 import java.util.Date;
 
 
+//import controller.ViewManager;
+import data.Database;
 import controller.ViewManager;
+//import data.Database;
+import model.BankAccount;
+import model.User;
 
 @SuppressWarnings("serial")
 public class CreateView extends JPanel implements ActionListener {
 	
 	//private JTextField accountField;
+	public User user;
+	public BankAccount bankAccount;
 	private ViewManager manager;
 	private JButton creatorButton;
 	private JButton cancelButton;
 	private JTextField first_name;
 	private JTextField last_name;
 	private JTextField dob;
-	private JTextField phone_number;
+	public JTextField phone_number;
+	public JTextField phone_number2;
+	public JTextField phone_number3;
 	private JTextField address;
 	private JTextField city;
 	private JComboBox state;
 	private JTextField postal_code;
 	private JPasswordField pinField;
+	public JComboBox<?> Dates;
+	public JComboBox<?> Month;
+	public JComboBox<?> Year;
+	private long Number;
 	
 	/**
 	 * Constructs an instance (or object) of the CreateView class.
@@ -134,11 +147,11 @@ public class CreateView extends JPanel implements ActionListener {
 	label.setLabelFor(dob);
 	label.setFont(new Font("DialogInput", Font.BOLD, 14));
 
-	dob = new JTextField(20);
+	/*dob = new JTextField(20);
 	dob.setBounds(205, 180, 200, 35);
-
+*/
 	this.add(label);
-	this.add(dob);
+	//this.add(dob);
 	
 	 /*JXDatePicker picker = new JXDatePicker();
      picker.setDate(Calendar.getInstance().getTime());
@@ -151,8 +164,31 @@ public class CreateView extends JPanel implements ActionListener {
 	JDatePickerImpl datePicker = new JDatePickerImpl(datePanel);
 	 
 	frame.add(datePicker);*/
-     
-     
+	//JLabel dob = new JLabel("Date:");
+	//dob.setBounds(105, 120, 100, 35);
+	String[] days = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+			 "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+			 "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+			 "31"};
+	String[] months = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",};
+	String[] years = new String[109];
+	int n = 1910;
+	for(int i = 0; i <= 108; i++){
+		years[i] = String.valueOf(n);
+		n++;
+	}
+
+	Dates = new JComboBox<Object>(days);
+	Dates.setBounds(205, 180, 60, 35);
+	Month = new JComboBox<Object>(months);
+	Month.setBounds(275, 180, 60, 35);
+	Year = new JComboBox<Object>(years);
+	Year.setBounds(345, 180, 60, 35);
+	this.add(Dates);
+
+	this.add(Month);
+
+	this.add(Year);
 	}
 
 	private void initpostal_code() {
@@ -217,11 +253,21 @@ public class CreateView extends JPanel implements ActionListener {
 		label.setLabelFor(postal_code);
 		label.setFont(new Font("DialogInput", Font.BOLD, 14));
 
-		phone_number = new JTextField(20);
-		phone_number.setBounds(205, 340, 200, 35);
+		phone_number = new JTextField(3);
+		phone_number.setBounds(205, 340, 60, 35);
+		
+		phone_number2 = new JTextField(3);
+		phone_number2.setBounds(275, 340, 60, 35);
+		
+		phone_number3 = new JTextField(3);
+		phone_number3.setBounds(345, 340, 60, 35);
 
 		this.add(label);
 		this.add(phone_number);
+		this.add(phone_number2);
+		this.add(phone_number3);
+		
+
 	}
 
 	private void initaddress() {
@@ -295,10 +341,12 @@ public class CreateView extends JPanel implements ActionListener {
 	private void initButtons() {
 		// TODO Auto-generated method stub
 		Button creatorButton = new Button("Create Account:");
+		creatorButton.setBounds(85, 40, 200, 35);
 		creatorButton.addActionListener(this);
 		add(creatorButton);
         
         Button cancelButton = new Button("Cancel Account:");
+        cancelButton.setBounds(275, 40, 200, 35);
         cancelButton.addActionListener(this);
         add(cancelButton);
 	}
@@ -430,8 +478,121 @@ public class CreateView extends JPanel implements ActionListener {
 		    	manager.switchTo(ATM.LOGIN_VIEW);
 				} else 
 					manager.switchTo(ATM.LOGIN_VIEW);
-    
 		
+		/* if (source.equals(creatorButton)) {
+			Database Database = new Database();
+			String fnameget = first_name.getText();
+			String lnameget = last_name.getText();
+			String dayget = (String) Dates.getSelectedItem();
+			String monthget = (String) Month.getSelectedItem();
+			String yearget = (String) Year.getSelectedItem();
+			String dobget = new String(yearget+monthget+dayget);
+			String phoneget1 = phone_number.getText();
+			String phoneget2 = phone_number2.getText();
+			String phoneget3 = phone_number3.getText();
+			String phoneget = new String(phoneget1 + phoneget2 + phoneget3);
+			String addressget = address.getText();
+			String cityget = city.getText(); 
+			String stateget = (String) state.getSelectedItem();
+			String zipget = postal_code.getText();
+			char[] passwordget =  pinField.getPassword();
+			String password = new String(passwordget);
+				//password += passwordget.clone();
+			System.out.println(fnameget + " "+lnameget+" "+dobget +" "+password +" "+ phoneget);
+			user = new User(Integer.parseInt(password), Integer.parseInt(dobget), Long.parseLong(phoneget), fnameget, lnameget, addressget, cityget, stateget, zipget);
+			bankAccount = new BankAccount('N', Number, 123.45, user);
+			Number++;
+			Database.insertAccount(bankAccount);
+			first_name.setText(null);
+			last_name.setText(null);
+			phone_number2.setText(null);
+			phone_number.setText(null);
+			phone_number3.setText(null);
+			Dates.setSelectedIndex(0);
+			Month.setSelectedIndex(0);
+			Year.setSelectedIndex(0);
+			state.setSelectedIndex(0);
+			address.setText(null);
+			city.setText(null);
+			postal_code.setText(null);
+			pinField.setText(null);
+			manager.switchTo(ATM.LOGIN_VIEW);
+		 }
+		 else {
+			 Database Database = new Database();
+				String fnameget = first_name.getText();
+				String lnameget = last_name.getText();
+				String dayget = (String) Dates.getSelectedItem();
+				String monthget = (String) Month.getSelectedItem();
+				String yearget = (String) Year.getSelectedItem();
+				String dobget = new String(yearget+monthget+dayget);
+				String phoneget1 = phone_number.getText();
+				String phoneget2 = phone_number2.getText();
+				String phoneget3 = phone_number3.getText();
+				String phoneget = new String(phoneget1 + phoneget2 + phoneget3);
+				String addressget = address.getText();
+				String cityget = city.getText(); 
+				String stateget = (String) state.getSelectedItem();
+				String zipget = postal_code.getText();
+				char[] passwordget =  pinField.getPassword();
+				String password = new String(passwordget);
+					//password += passwordget.clone();
+				System.out.println(fnameget + " "+lnameget+" "+dobget +" "+password +" "+ phoneget);
+				user = new User(Integer.parseInt(password), Integer.parseInt(dobget), Long.parseLong(phoneget), fnameget, lnameget, addressget, cityget, stateget, zipget);
+				bankAccount = new BankAccount('N', Number, 123.45, user);
+				Number++;
+				Database.insertAccount(bankAccount);
+				first_name.setText(null);
+				last_name.setText(null);
+				phone_number2.setText(null);
+				phone_number.setText(null);
+				phone_number3.setText(null);
+				Dates.setSelectedIndex(0);
+				Month.setSelectedIndex(0);
+				Year.setSelectedIndex(0);
+				state.setSelectedIndex(0);
+				address.setText(null);
+				city.setText(null);
+				postal_code.setText(null);
+				pinField.setText(null);
+				manager.switchTo(ATM.LOGIN_VIEW);
+		 }
+			
+			if (source.equals(cancelButton)) {
+				first_name.setText(null);
+				last_name.setText(null);
+				phone_number2.setText(null);
+				phone_number.setText(null);
+				phone_number3.setText(null);
+				Dates.setSelectedIndex(0);
+				Month.setSelectedIndex(0);
+				Year.setSelectedIndex(0);
+				state.setSelectedIndex(0);
+				address.setText(null);
+				city.setText(null);
+				postal_code.setText(null);
+				pinField.setText(null);
+				manager.switchTo(ATM.LOGIN_VIEW);
+			}
+			else
+			{
+				first_name.setText(null);
+				last_name.setText(null);
+				phone_number2.setText(null);
+				phone_number.setText(null);
+				phone_number3.setText(null);
+				Dates.setSelectedIndex(0);
+				Month.setSelectedIndex(0);
+				Year.setSelectedIndex(0);
+				state.setSelectedIndex(0);
+				address.setText(null);
+				city.setText(null);
+				postal_code.setText(null);
+				pinField.setText(null);
+				manager.switchTo(ATM.LOGIN_VIEW);
+			}
+				
+		*/
 		// TODO
 		//
 		// this is where you'll setup your action listener, which is responsible for
@@ -441,3 +602,4 @@ public class CreateView extends JPanel implements ActionListener {
 		// feel free to use my action listener in LoginView.java as an example.
 	}
 }
+

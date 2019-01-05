@@ -1,5 +1,5 @@
-package data;
 
+package data;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -8,15 +8,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
-
 import model.BankAccount;
 
 public class Database {
-	
 	/*
 	 * Field names for database table: accounts.
 	 */
-	
+
 	public static final String ACCOUNT_NUMBER = "account_number";
 	public static final String PIN = "pin";
 	public static final String BALANCE = "balance";
@@ -26,57 +24,137 @@ public class Database {
 	public static final String PHONE = "phone";
 	public static final String STREET_ADDRESS = "street_address";
 	public static final String CITY = "city";
+
 	public static final String STATE = "state";
+
 	public static final String ZIP = "zip";
+
 	public static final String STATUS = "status";
+
 	
+
 	private Connection conn;			// a connection to the database
+
 	private Statement stmt;				// the statement used to build inserts, updates and selects
+
 	private ResultSet rs;				// result set used for selects
+
 	private DatabaseMetaData meta;		// metadata about the database
+
+	//private AccountNumber accountNum;
+
 	
+
 	/**
+
 	 * Constructs an instance (or object) of the Database class.
+
 	 */
+
 	
+
 	public Database() {
+
 		try {
+
 			this.connect();
+
 			this.setup();
+
 		} catch (SQLException e) {
+
 			e.printStackTrace();
+
 		}
+
 	}
+
 	
+
 	///////////////////// INSTANCE METHODS ////////////////////////////////////////////
+
 	
+
 	/**
+
 	 * Retrieves an existing account by account number and PIN.
+
 	 * 
+
 	 * @param accountNumber
+
 	 * @param pin
+
 	 * @return
+
 	 */
+
 	
+
 	public BankAccount getAccount(long accountNumber, int pin) {
+
 		try {
+
 			stmt = conn.createStatement();
+
 			
+
 			PreparedStatement selectStmt = conn.prepareStatement("SELECT * FROM accounts WHERE account_number = ? AND pin = ?");
+
 			selectStmt.setLong(1, accountNumber);
+
 			selectStmt.setInt(2, pin);
+
 			
+
 			rs = selectStmt.executeQuery();
+
 			if (rs.next()) {
+
 				return new BankAccount(rs);
+
 			}
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+
+		}
+
+		
+
+		return null;
+
+	}
+
+	
+
+	public long highacct() {
+
+		long accountnum = 100000000;
+
+		try {
+
+			stmt = conn.createStatement();
+
+			PreparedStatement select = conn.prepareStatement("SELECT MAX(account_number) FROM accounts");
+
+			rs = select.executeQuery();
+
+			System.out.println(rs);
+
+			if(rs.next()) {
+				return rs.getLong(1);
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		return null;
+		return accountnum;
 	}
+
 	
+
 	/**
 	 * Retrieves an existing account by account number.
 	 * 
@@ -84,35 +162,39 @@ public class Database {
 	 * @return
 	 */
 	
+
 	public BankAccount getAccount(long accountNumber) {
+
 		try {
 			stmt = conn.createStatement();
-			
 			PreparedStatement selectStmt = conn.prepareStatement("SELECT * FROM accounts WHERE account_number = ?");
 			selectStmt.setLong(1, accountNumber);
-			
 			rs = selectStmt.executeQuery();
+
 			if (rs.next()) {
 				return new BankAccount(rs);
 			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return null;
 	}
 	
+
 	/**
 	 * Inserts an account into the database.
 	 * 
 	 * @param account
 	 * @return true if the insert is successful; false otherwise.
 	 */
+
 	
+
 	public boolean insertAccount(BankAccount account) {
 		try {
 			stmt = conn.createStatement();
-			
+
 			PreparedStatement insertStmt = conn.prepareStatement("INSERT INTO accounts VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");		
 			insertStmt.setLong(1, account.getAccountNumber());
 			insertStmt.setInt(2, account.getUser().getPin());
@@ -126,44 +208,44 @@ public class Database {
 			insertStmt.setString(10, account.getUser().getState());
 			insertStmt.setString(11, account.getUser().getZip());
 			insertStmt.setString(12, String.valueOf(account.getStatus()));
-			
 			insertStmt.executeUpdate();
 			insertStmt.close();
-			
 			return true;
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return false;
 	}
+
 	
+
 	/**
 	 * Performs a soft delete of an account by setting the status to closed.
 	 * 
 	 * @param account
 	 * @return true if the transaction is successful; false otherwise.
 	 */
+
 	
+
 	public boolean closeAccount(BankAccount account) {
 		try {
 			stmt = conn.createStatement();
-			
 			PreparedStatement insertStmt = conn.prepareStatement("UPDATE accounts SET status = ? WHERE account_number = ?");		
 			insertStmt.setString(1, "N");
 			insertStmt.setLong(2, account.getAccountNumber());
-			
 			insertStmt.executeUpdate();
 			insertStmt.close();
-			
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return false;
 	}
+
 	
+
 	/**
 	 * Updates all potentially edited fields (i.e., PIN, account balance, phone number,
 	 * street address, city, state, and zip code).
@@ -172,12 +254,15 @@ public class Database {
 	 * @return true if the transaction is successful; false otherwise.
 	 */
 	
+
 	public boolean updateAccount(BankAccount account) {
 		try {
 			stmt = conn.createStatement();
-			
+
 			// all editable fields are included in this update statement
+
 			
+
 			PreparedStatement insertStmt = conn.prepareStatement(
 				"UPDATE accounts SET " +
 					"pin = ?, " +
@@ -197,70 +282,63 @@ public class Database {
 			insertStmt.setString(6, account.getUser().getState());
 			insertStmt.setString(7, account.getUser().getZip());
 			insertStmt.setLong(8, account.getAccountNumber());
-			
 			insertStmt.executeUpdate();
 			insertStmt.close();
-			
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return false;
+
 	}
-	
 	/**
 	 * Shuts down the database, releasing all allocated resources.
 	 * 
 	 * @throws SQLException
 	 */
-	
 	public void shutdown() throws SQLException {
 		if (rs != null) rs.close();
 		if (stmt != null) stmt.close();
 		if (conn != null) conn.close();
 	}
-	
 	///////////////////// PRIVATE METHODS /////////////////////////////////////////////
-	
 	/*
 	 * Establishes a connection to the database.
 	 * 
 	 * @throws SQLException
 	 */
-	
 	private void connect() throws SQLException {
 		Properties props = new Properties();
         props.put("user", "user1");
         props.put("password", "user1");
-
         conn = DriverManager.getConnection("jdbc:derby:atm;create=true", props);
 	}
-	
 	/*
 	 * Performs initial database setup.
 	 * 
 	 * @throws SQLException
 	 */
-	
 	private void setup() throws SQLException {
 		createAccountsTable();
 		insertDefaultAccount();
 	}
 	
+
 	/*
 	 * Creates the initial accounts table. This will only be done once during initial setup.
 	 * 
 	 * @throws SQLException
 	 */
+
 	
+
 	private void createAccountsTable() throws SQLException {
+
 		meta = conn.getMetaData();
 		rs = meta.getTables(null, "USER1", "ACCOUNTS", null);
-		
+
 		if (!rs.next()) {
 			stmt = conn.createStatement();
-			
 			stmt.execute(
 				"CREATE TABLE accounts (" +
 					"account_number BIGINT PRIMARY KEY, " +
@@ -279,19 +357,23 @@ public class Database {
 			);
 		}
 	}
+
 	
+
 	/*
 	 * Inserts a default account into the database. This will only be done once during initial setup.
 	 * 
 	 * @throws SQLException
 	 */
 	
+
 	private void insertDefaultAccount() throws SQLException {
+
 		stmt = conn.createStatement();
 		rs = stmt.executeQuery("SELECT COUNT(*) FROM accounts");
+
 		if (rs.next() && rs.getInt(1) == 0) {
 			PreparedStatement insertStmt = conn.prepareStatement("INSERT INTO accounts VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			
 			insertStmt.setLong(1, 100000001L);
 			insertStmt.setInt(2, 1234);
 			insertStmt.setDouble(3, 0.00);
@@ -304,7 +386,6 @@ public class Database {
 			insertStmt.setString(10, "NJ");
 			insertStmt.setString(11, "07065");
 			insertStmt.setString(12, "Y");
-			
 			insertStmt.executeUpdate();
 			insertStmt.close();
 		}
