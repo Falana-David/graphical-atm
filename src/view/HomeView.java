@@ -2,8 +2,11 @@ package view;
 
 import java.applet.Applet;
 import controller.ViewManager;
+import model.BankAccount;
+
 import java.awt.BorderLayout;
 import java.awt.Button;
+import java.awt.CardLayout;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -28,9 +31,11 @@ public class HomeView extends JPanel implements ActionListener {
 	private ViewManager manager;		// manages interactions between the views, model, and database
 	private JButton depositButton;
 	private JButton withdrawButton;
+	private JButton transferButton;
 	private JButton closeButton;
 	private JButton logoutButton;
 	private JLabel headerLabel;
+	private BankAccount Account = null;
 
 	
 	/**
@@ -106,8 +111,24 @@ public class HomeView extends JPanel implements ActionListener {
         Button closeButton = new Button("Logout");
         closeButton.addActionListener(this);
         add(closeButton);
-	}
         
+        Button transferButton = new Button("Transfer");
+        transferButton.addActionListener(this);
+        add(transferButton);
+	}
+
+	public void setCurrentAccount(BankAccount Account) {
+		this.Account = Account;
+		initialize();
+
+		JPanel views = new JPanel(new CardLayout());
+		ViewManager manager = new ViewManager(views);
+		views.add(new DepositView(manager), ATM.DEPOSIT_VIEW);
+	}
+
+		//views.add(new WithdrawView(manager));
+
+		//views.add(new TransferView(manager));
     	/*Panel p = new Panel();
 	    p.setLayout(new BorderLayout());
 	    p.add(new Button("Okay"), BorderLayout.SOUTH);
@@ -144,6 +165,27 @@ public class HomeView extends JPanel implements ActionListener {
     	//pinField = null;
 		} else {
 			manager.switchTo(ATM.LOGIN_VIEW);
+    }
+		
+		if (source.equals(depositButton)) {
+			manager.switchTo(ATM.DEPOSIT_VIEW);
+		}
+		else {
+			manager.switchTo(ATM.DEPOSIT_VIEW);
+		}
+
+		if (source.equals(withdrawButton)) {
+			manager.switchTo(ATM.WITHDRAW_VIEW);
+		}
+		else {
+			manager.switchTo(ATM.WITHDRAW_VIEW);
+    }
+
+		if (source.equals(transferButton)) {
+			manager.switchTo(ATM.TRANSFER_VIEW);
+		}
+		else {
+			manager.switchTo(ATM.TRANSFER_VIEW);
     }
 		// TODO
 		//
