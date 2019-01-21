@@ -1,5 +1,5 @@
-
 package data;
+
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 import model.BankAccount;
+
+
 
 public class Database {
 	/*
@@ -24,69 +26,43 @@ public class Database {
 	public static final String PHONE = "phone";
 	public static final String STREET_ADDRESS = "street_address";
 	public static final String CITY = "city";
-
 	public static final String STATE = "state";
-
 	public static final String ZIP = "zip";
-
 	public static final String STATUS = "status";
-
 	
-
 	private Connection conn;			// a connection to the database
-
 	private Statement stmt;				// the statement used to build inserts, updates and selects
-
 	private ResultSet rs;				// result set used for selects
-
 	private DatabaseMetaData meta;		// metadata about the database
-
-	//private AccountNumber accountNum;
 
 	
 
 	/**
-
 	 * Constructs an instance (or object) of the Database class.
-
 	 */
 
-	
 
 	public Database() {
 
 		try {
-
 			this.connect();
-
 			this.setup();
-
 		} catch (SQLException e) {
-
 			e.printStackTrace();
-
 		}
-
 	}
 
 	
 
 	///////////////////// INSTANCE METHODS ////////////////////////////////////////////
 
-	
 
 	/**
-
 	 * Retrieves an existing account by account number and PIN.
-
 	 * 
-
 	 * @param accountNumber
-
 	 * @param pin
-
 	 * @return
-
 	 */
 
 	
@@ -94,63 +70,20 @@ public class Database {
 	public BankAccount getAccount(long accountNumber, int pin) {
 
 		try {
-
 			stmt = conn.createStatement();
-
-			
-
 			PreparedStatement selectStmt = conn.prepareStatement("SELECT * FROM accounts WHERE account_number = ? AND pin = ?");
-
 			selectStmt.setLong(1, accountNumber);
-
 			selectStmt.setInt(2, pin);
-
-			
-
 			rs = selectStmt.executeQuery();
 
 			if (rs.next()) {
-
 				return new BankAccount(rs);
-
 			}
 
 		} catch (SQLException e) {
-
 			e.printStackTrace();
-
 		}
-
-		
-
 		return null;
-
-	}
-
-	
-
-	public long highacct() {
-
-		long accountnum = 100000000;
-
-		try {
-
-			stmt = conn.createStatement();
-
-			PreparedStatement select = conn.prepareStatement("SELECT MAX(account_number) FROM accounts");
-
-			rs = select.executeQuery();
-
-			System.out.println(rs);
-
-			if(rs.next()) {
-				return rs.getLong(1);
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return accountnum;
 	}
 
 	
@@ -161,6 +94,7 @@ public class Database {
 	 * @param accountNumber
 	 * @return
 	 */
+
 	
 
 	public BankAccount getAccount(long accountNumber) {
@@ -170,16 +104,15 @@ public class Database {
 			PreparedStatement selectStmt = conn.prepareStatement("SELECT * FROM accounts WHERE account_number = ?");
 			selectStmt.setLong(1, accountNumber);
 			rs = selectStmt.executeQuery();
-
 			if (rs.next()) {
 				return new BankAccount(rs);
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
+
 	
 
 	/**
@@ -192,9 +125,9 @@ public class Database {
 	
 
 	public boolean insertAccount(BankAccount account) {
+
 		try {
 			stmt = conn.createStatement();
-
 			PreparedStatement insertStmt = conn.prepareStatement("INSERT INTO accounts VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");		
 			insertStmt.setLong(1, account.getAccountNumber());
 			insertStmt.setInt(2, account.getUser().getPin());
@@ -230,6 +163,7 @@ public class Database {
 	
 
 	public boolean closeAccount(BankAccount account) {
+
 		try {
 			stmt = conn.createStatement();
 			PreparedStatement insertStmt = conn.prepareStatement("UPDATE accounts SET status = ? WHERE account_number = ?");		
@@ -238,6 +172,7 @@ public class Database {
 			insertStmt.executeUpdate();
 			insertStmt.close();
 			return true;
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -245,7 +180,6 @@ public class Database {
 	}
 
 	
-
 	/**
 	 * Updates all potentially edited fields (i.e., PIN, account balance, phone number,
 	 * street address, city, state, and zip code).
@@ -253,15 +187,14 @@ public class Database {
 	 * @param account
 	 * @return true if the transaction is successful; false otherwise.
 	 */
+
 	
 
 	public boolean updateAccount(BankAccount account) {
+
 		try {
 			stmt = conn.createStatement();
-
 			// all editable fields are included in this update statement
-
-			
 
 			PreparedStatement insertStmt = conn.prepareStatement(
 				"UPDATE accounts SET " +
@@ -285,43 +218,81 @@ public class Database {
 			insertStmt.executeUpdate();
 			insertStmt.close();
 			return true;
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return false;
-
 	}
+
+
+	/**
+	 * Retrieves the largest account number that exists in the database.
+	 * 
+	 * @return
+	 * @throws SQLException
+	 */
+
+	
+
+	public long getMaxAccountNumber() throws SQLException {
+
+		stmt = conn.createStatement();
+		rs = stmt.executeQuery("SELECT MAX(account_number) FROM accounts");
+
+		if (rs.next()) {
+			return rs.getLong(1);
+		} else {
+			return -1;
+		}
+	}
+
+
 	/**
 	 * Shuts down the database, releasing all allocated resources.
 	 * 
 	 * @throws SQLException
 	 */
+
+	
+
 	public void shutdown() throws SQLException {
 		if (rs != null) rs.close();
 		if (stmt != null) stmt.close();
 		if (conn != null) conn.close();
 	}
+
+	
+
 	///////////////////// PRIVATE METHODS /////////////////////////////////////////////
 	/*
 	 * Establishes a connection to the database.
 	 * 
 	 * @throws SQLException
 	 */
+
+	
+
 	private void connect() throws SQLException {
 		Properties props = new Properties();
         props.put("user", "user1");
         props.put("password", "user1");
         conn = DriverManager.getConnection("jdbc:derby:atm;create=true", props);
 	}
+
 	/*
 	 * Performs initial database setup.
 	 * 
 	 * @throws SQLException
 	 */
+
+	
+
 	private void setup() throws SQLException {
 		createAccountsTable();
 		insertDefaultAccount();
 	}
+
 	
 
 	/*
@@ -336,6 +307,7 @@ public class Database {
 
 		meta = conn.getMetaData();
 		rs = meta.getTables(null, "USER1", "ACCOUNTS", null);
+
 
 		if (!rs.next()) {
 			stmt = conn.createStatement();
@@ -358,13 +330,12 @@ public class Database {
 		}
 	}
 
-	
-
 	/*
 	 * Inserts a default account into the database. This will only be done once during initial setup.
 	 * 
 	 * @throws SQLException
 	 */
+
 	
 
 	private void insertDefaultAccount() throws SQLException {

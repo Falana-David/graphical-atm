@@ -1,216 +1,98 @@
 package view;
 
-
-
-	import java.awt.CardLayout;
-
-	import java.awt.Image;
-
-	import java.awt.event.ActionEvent;
-
-	import java.awt.event.ActionListener;
-
-	import java.io.File;
-
-	import java.io.IOException;
-
-	import java.io.ObjectOutputStream;
-
-
-
-	import javax.imageio.ImageIO;
-
-	import javax.swing.ImageIcon;
-
-	import javax.swing.JButton;
-
-	import javax.swing.JLabel;
-
-	import javax.swing.JPanel;
-
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
-
 import javax.swing.SwingConstants;
-
-
-
 import controller.ViewManager;
-
-import data.Database;
-
 import model.BankAccount;
 
-
-
-import controller.ViewManager;
-
-
-
-public class TransferView extends JPanel implements ActionListener {
-
-	private ViewManager manager;			// manages interactions between the views, model, and database
-
-	private JButton submitButton;
-
-	private JButton cancelButton;
-
-	private JButton powerButton;			// button that powers off the ATM
-
-	private JTextField inputfield;
-
-	private JTextField valueField;
-
-	private JLabel errorMessageLabel;		// label for potential error messages
-
-	public BankAccount Account = null;
-
-	
+@SuppressWarnings("serial")
+public class TransferView extends JPanel implements ActionListener{
+	private ViewManager manager;
+	private JLabel errorMessageLabel;
+	private JButton homeButton;
+	private JLabel amount;
+	private JTextField damount;
+	private JButton TransferButton;
+	private JLabel label;
+	private JTextField accountField;
 
 	public TransferView(ViewManager manager) {
-
 		super();
-
 		this.manager = manager;
-
 		this.errorMessageLabel = new JLabel("", SwingConstants.CENTER);
-
-	}
-
-	
-
-	private void initialize() {
-
-		this.setLayout(null);
-
-		JPanel log = new JPanel(new CardLayout());
-
-		JLabel info = new JLabel ("Your name is " + Account.getUser().getFirstName() + ' ' + Account.getUser().getLastName() + "."); 
-
-		info.setBounds(200, 0, 300, 10);
-
-		JLabel accountnum = new JLabel("Your Account Number is " + Account.getAccountNumber() + ".");
-
-		accountnum.setBounds(200, 15, 300, 10);
-
-		JLabel balance = new JLabel("Your Current Balance is " + Account.getBalance() + ".");
-
-		balance.setBounds(200, 30, 300, 10);
-
-		submitButton = new JButton("SUBMIT");
-
-		submitButton.setBounds(100, 300, 100, 50);
-
-		submitButton.addActionListener(this);
-
-		
-
-		cancelButton = new JButton("CANCEL");
-
-		cancelButton.setBounds(200, 300, 100, 50);
-
-		cancelButton.addActionListener(this);
-
-		
-
-		//powerButton = new JButton();
-
-		JLabel deposit = new JLabel("Enter user:");
-
-		deposit.setBounds(200,200,100,50);
-
-		inputfield = new JTextField();
-
-		inputfield.setBounds(100, 150, 200, 50);
-
-		
-
-		valueField = new JTextField();
-
-		valueField.setBounds(300, 150, 200, 50);
-
-		this.add(info); 
-
-		this.add(accountnum); 
-
-		this.add(balance); 
-
-		this.add(deposit);
-
-		this.add(submitButton);
-
-		this.add(cancelButton);
-
-		this.add(inputfield);
-
-		this.add(new javax.swing.JLabel("DepositView", javax.swing.SwingConstants.CENTER));
-
+		initialize();
 	}
 
 	public void updateErrorMessage(String errorMessage) {
-
 		errorMessageLabel.setText(errorMessage);
+	}
 
+	
+	private void initialize() {
+		this.setLayout(null);
+		inithomeButton();
+		initgetAmount();
+		initTransferButton();
+		initAccount();
+	}
+
+	private void inithomeButton() {	
+		homeButton = new JButton("Back to Home");
+		homeButton.setBounds(205, 180, 200, 35);
+		homeButton.addActionListener(this);
+		this.add(homeButton);
+	}
+
+	private void initgetAmount() {
+		amount = new JLabel("Amount: $");
+		amount.setBounds(100, 100, 95, 35);
+		amount.setLabelFor(damount);
+		amount.setFont(new Font("DialogInput", Font.BOLD, 14));
+		damount = new JTextField(20);
+		damount.setBounds(205, 100, 200, 35);
+		this.add(amount);
+		this.add(damount);
+	}
+
+	private void initAccount() {
+		label = new JLabel("Account #:", SwingConstants.RIGHT);
+		label.setBounds(100, 140, 95, 35);
+		label.setLabelFor(accountField);
+		label.setFont(new Font("DialogInput", Font.BOLD, 14));
+		accountField = new JTextField(20);
+		accountField.setBounds(205, 140, 200, 35);
+		this.add(label);
+		this.add(accountField);
+	}
+
+	public void initTransferButton() {
+		TransferButton = new JButton("Transfer");
+		TransferButton.setBounds(126, 360, 248, 35);
+		TransferButton.addActionListener(this);
+		this.add(TransferButton);
 	}
 
 	@Override
-
 	public void actionPerformed(ActionEvent e) {
-
-		Database Database = new Database();
-
+		// TODO Auto-generated method stub
 		Object source = e.getSource();
-
-		
-
-		if (source.equals(cancelButton)) {
-
-			inputfield.setText(null);
-
-		} 
-
-		if (source.equals(powerButton)) {
-
-			manager.shutdown();
-
-		}
-
-		if (source.equals(submitButton)) {
-
-			int add = Integer.parseInt(inputfield.getText());
-
-			Account.removeBalance(add);
-
+		if (source.equals(homeButton)) {
 			manager.switchTo(ATM.HOME_VIEW);
-
+		} 
+		else if (source.equals(TransferButton)) {
+			double amount = Double.parseDouble(damount.getText());
+			BankAccount destination = manager.db.getAccount(Integer.parseInt(accountField.getText()));
+			manager.transfer(amount, destination);
 		}
-
-
-
-		
-
 	}
 
-	public void setCurrentAccount(BankAccount Account) {
-
-		this.Account = Account;
-
-		initialize();
-
-		
-
-		JPanel views = new JPanel(new CardLayout());
-
-		ViewManager manager = new ViewManager(views);
-
-		
-
-		// add child views to the parent container
-
-
-
-		
-
-	}
+	
 
 	
 

@@ -18,11 +18,15 @@ import data.Database;
 
 import model.BankAccount;
 
+//import model.User;
+
 import view.ATM;
 
-import view.DepositView;
+import view.EditView;
 
 import view.HomeView;
+
+import view.InformationView;
 
 import view.LoginView;
 
@@ -34,13 +38,13 @@ public class ViewManager {
 
 	private Container views;				// the collection of all views in the application
 
-	private Database db;					// a reference to the database
+	public Database db;					// a reference to the database
 
 	private BankAccount account;			// the user's bank account
 
-	private BankAccount destination;		// an account to which the user can transfer funds
+	//private BankAccount destination;		// an account to which the user can transfer funds
 
-	
+	//private User user;
 
 	/**
 
@@ -64,7 +68,7 @@ public class ViewManager {
 
 	}
 
-	
+	  
 
 	///////////////////// INSTANCE METHODS ////////////////////////////////////////////
 
@@ -86,39 +90,241 @@ public class ViewManager {
 
 	public void login(String accountNumber, char[] pin) {
 
-		account = db.getAccount(Long.valueOf(accountNumber), Integer.valueOf(new String(pin)));
+		try {
 
-		
-
-		if (account == null) {
-
-			LoginView lv = ((LoginView) views.getComponents()[ATM.LOGIN_VIEW_INDEX]);
-
-			lv.updateErrorMessage("Invalid account number and/or PIN.");
-
-		} else {
-
-			switchTo(ATM.HOME_VIEW);
-
-			HomeView hv = ((HomeView) views.getComponents()[ATM.HOME_VIEW_INDEX]);
-
-		//	hv.setCurrentAccount(account);
+			account = db.getAccount(Long.valueOf(accountNumber), Integer.valueOf(new String(pin)));
 
 			
 
-			LoginView lv = ((LoginView) views.getComponents()[ATM.LOGIN_VIEW_INDEX]);
+			if (account == null) {
 
-			lv.updateErrorMessage("");
+				LoginView lv = ((LoginView) views.getComponents()[ATM.LOGIN_VIEW_INDEX]);
 
-			
+				lv.updateErrorMessage("Invalid account number and/or PIN.");
 
-			DepositView dv = ((DepositView) views.getComponents()[ATM.DEPOSIT_VIEW_INDEX]);
+			} else {
 
-			dv.setCurrentAccount(account);
+				switchTo(ATM.HOME_VIEW);
 
-			dv.updateErrorMessage("");
+				
+
+				LoginView lv = ((LoginView) views.getComponents()[ATM.LOGIN_VIEW_INDEX]);
+
+				lv.updateErrorMessage("");
+
+				
+
+				HomeView hv = ((HomeView) views.getComponents()[ATM.HOME_VIEW_INDEX]);
+
+				hv.initDisplayInfo();
+
+				hv.initDepositButton();
+
+				hv.initWithdrawButton();
+
+				hv.initTransferButton();
+
+				hv.initCloseAccountButton();
+
+				hv.initEditAccountButton();
+
+				
+
+				EditView ev = ((EditView) views.getComponents()[ATM.EDIT_VIEW_INDEX]);
+
+				ev.initaccountNumber();
+
+				ev.initeditButton();
+
+				ev.inithomeButton();
+
+				
+
+				InformationView iv = ((InformationView) views.getComponents()[ATM.INFORMATION_VIEW_INDEX]);
+
+				iv.initallInfo();
+
+				iv.initEditButton();
+
+				iv.inithomeButton();
+
+			}
+
+		} catch (NumberFormatException e) {
+
+			// ignore
 
 		}
+
+	}
+
+	
+
+	public long newAccountNumber() throws SQLException {
+
+		long accountNum =  1 + db.getMaxAccountNumber();
+
+		return accountNum;
+
+	}
+
+	
+
+	public void newAccount(BankAccount account) {
+
+		db.insertAccount(account);
+
+	}
+
+	
+
+	public long getAccountNum() {
+
+		long accountnum = account.getAccountNumber();
+
+		return accountnum;
+
+	}
+
+	
+
+	public String getLast() {
+
+		String lastname = account.getUser().getLastName();
+
+		return lastname;
+
+	}
+
+	
+
+	public String getFirst() {
+
+		String firstname = account.getUser().getFirstName();
+
+		return firstname;
+
+	}
+
+	
+
+	public double getBalance() {
+
+		double balance = account.getBalance();
+
+		return balance;
+
+	}
+
+	
+
+	public String getStreetAddress() {
+
+		String streetAddress = account.getUser().getStreetAddress();
+
+		return streetAddress;
+
+	}
+
+	
+
+	public String getCity() {
+
+		String city = account.getUser().getCity();
+
+		return city;
+
+	}
+
+	
+
+	public String getState() {
+
+		String state = account.getUser().getState();
+
+		return state;
+
+	}
+
+	
+
+	public String getPostal() {
+
+		String postal = account.getUser().getZip();
+
+		return postal;
+
+	}
+
+	
+
+	public int getDOB() {
+
+		int dob = account.getUser().getDob();
+
+		return dob;
+
+	}
+
+	
+
+	public long getPhone() {
+
+		long phone = account.getUser().getPhone();
+
+		return phone;
+
+	}
+
+	
+
+	public int getPin() {
+
+		int pin = account.getUser().getPin();
+
+		return pin;
+
+	}
+
+	
+
+	public void deposit(double amount) {
+
+		account.deposit(amount);
+
+		db.updateAccount(account);
+
+	}
+
+	
+
+	public void withdraw(double amount) {
+
+		account.withdraw(amount);
+
+		db.updateAccount(account);
+
+	}
+
+	
+
+	public void transfer(double amount, BankAccount destination) {
+
+		account.transfer(destination, amount);
+
+		db.updateAccount(destination);
+
+		db.updateAccount(account);
+
+	}
+
+	
+
+	public void closeAccount(long accountNumber) {
+
+		BankAccount temp = db.getAccount(accountNumber);
+
+		db.closeAccount(temp);
 
 	}
 
@@ -187,32 +393,6 @@ public class ViewManager {
 			e.printStackTrace();
 
 		}
-
-	}
-
-
-
-	public void logout() {
-
-		boolean x = db.closeAccount(account);
-
-		if (x) {
-
-			ViewManager ViewManager = new ViewManager(views);
-
-			ViewManager.switchTo(ATM.LOGIN_VIEW);
-
-
-
-		}
-
-		else {
-
-			System.out.println("Error");
-
-		}
-
-		
 
 	}
 

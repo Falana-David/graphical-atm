@@ -173,59 +173,30 @@ public class BankAccount {
 	 */
 	
 	private String getFormattedBalance() {
-
 		return NumberFormat.getCurrencyInstance(Locale.US).format(balance);
-
 	}
 
-	
 
 	///////////////////// OVERRIDDEN METHODS //////////////////////////////////////////
 
-
-
 	/*
-
 	 * Generates a String representation of the BankAccount
-
 	 * 
-
 	 * @return
-
 	 */
-
-	
-
 	@Override
 
 	public String toString() {
-
 		return "{ Account No.: " + accountNumber + ", Balance: " + getFormattedBalance() + " }";	// modify as needed
-
 	}
-
-
 
 	public double addBalance(int value) {
-
 		balance += value;
-
 		return balance;
-
-		
-
 	}
-
-
 
 	public double removeBalance(int value) {
-
 		balance -= value;
-
 		return balance;
-
-		
-
 	}
-
 }

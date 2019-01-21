@@ -1,205 +1,94 @@
 package view;
 
-
-
-	import java.awt.CardLayout;
-
-	import java.awt.Image;
-
-	import java.awt.event.ActionEvent;
-
-	import java.awt.event.ActionListener;
-
-	import java.io.File;
-
-	import java.io.IOException;
-
-	import java.io.ObjectOutputStream;
-
-
-
-	import javax.imageio.ImageIO;
-
-	import javax.swing.ImageIcon;
-
-	import javax.swing.JButton;
-
-	import javax.swing.JLabel;
-
-	import javax.swing.JPanel;
-
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
-
 import javax.swing.SwingConstants;
-
-
-
 import controller.ViewManager;
 
-import data.Database;
-
-import model.BankAccount;
-
-
-
-import controller.ViewManager;
-
-
-
-public class WithdrawView extends JPanel implements ActionListener {
-
-	private ViewManager manager;			// manages interactions between the views, model, and database
-
-	private JButton submitButton;
-
-	private JButton cancelButton;
-
-	private JButton powerButton;			// button that powers off the ATM
-
-	private JTextField inputfield;
-
-	private JLabel errorMessageLabel;		// label for potential error messages
-
-	public BankAccount Account = null;
-
-	
+@SuppressWarnings("serial")
+public class WithdrawView extends JPanel implements ActionListener{
+	private ViewManager manager;
+	private JLabel errorMessageLabel;
+	private JButton homeButton;
+	private JLabel amount;
+	private JTextField damount;
+	private JButton WithdrawButton;
 
 	public WithdrawView(ViewManager manager) {
-
 		super();
-
 		this.manager = manager;
-
 		this.errorMessageLabel = new JLabel("", SwingConstants.CENTER);
-
-	}
-
-	
-
-	private void initialize() {
-
-		this.setLayout(null);
-
-		JPanel log = new JPanel(new CardLayout());
-
-		JLabel info = new JLabel ("Your name is " + Account.getUser().getFirstName() + ' ' + Account.getUser().getLastName() + "."); 
-
-		info.setBounds(200, 0, 300, 10);
-
-		JLabel accountnum = new JLabel("Your Account Number is " + Account.getAccountNumber() + ".");
-
-		accountnum.setBounds(200, 15, 300, 10);
-
-		JLabel balance = new JLabel("Your Current Balance is " + Account.getBalance() + ".");
-
-		balance.setBounds(200, 30, 300, 10);
-
-		submitButton = new JButton("SUBMIT");
-
-		submitButton.setBounds(100, 300, 100, 50);
-
-		submitButton.addActionListener(this);
-
-		
-
-		cancelButton = new JButton("CANCEL");
-
-		cancelButton.setBounds(200, 300, 100, 50);
-
-		cancelButton.addActionListener(this);
-
-		
-
-		//powerButton = new JButton();
-
-		JLabel deposit = new JLabel("Enter Withdrawl Amount:");
-
-		deposit.setBounds(200,200,100,50);
-
-		inputfield = new JTextField();
-
-		inputfield.setBounds(100, 150, 200, 50);
-
-		this.add(info); 
-
-		this.add(accountnum); 
-
-		this.add(balance); 
-
-		this.add(deposit);
-
-		this.add(submitButton);
-
-		this.add(cancelButton);
-
-		this.add(inputfield);
-
-		this.add(new javax.swing.JLabel("DepositView", javax.swing.SwingConstants.CENTER));
-
+		initialize();
 	}
 
 	public void updateErrorMessage(String errorMessage) {
-
 		errorMessageLabel.setText(errorMessage);
-
-	}
-
-	@Override
-
-	public void actionPerformed(ActionEvent e) {
-
-		Database Database = new Database();
-
-		Object source = e.getSource();
-
-		
-
-		if (source.equals(cancelButton)) {
-
-			inputfield.setText(null);
-
-		} 
-
-		if (source.equals(powerButton)) {
-
-			manager.shutdown();
-
-		}
-
-		if (source.equals(submitButton)) {
-
-			int add = Integer.parseInt(inputfield.getText());
-
-			Account.removeBalance(add);
-
-			manager.switchTo(ATM.HOME_VIEW);
-
-		}
-
-
-
-		
-
-	}
-
-	public void setCurrentAccount(BankAccount Account) {
-
-		this.Account = Account;
-
-		initialize();
-
-		JPanel views = new JPanel(new CardLayout());
-
-		ViewManager manager = new ViewManager(views);
-
-		// add child views to the parent container
-
-
-
-		
-
 	}
 
 	
+	private void initialize() {
+		this.setLayout(null);
+		inithomeButton();
+		initgetAmount();
+		initWithdrawButton();
+		initErrorMessageLabel();
+	}
 
+	private void initErrorMessageLabel() {
+		errorMessageLabel.setBounds(0, 240, 500, 35);
+		errorMessageLabel.setFont(new Font("DialogInput", Font.ITALIC, 14));
+		errorMessageLabel.setForeground(Color.RED);
+		this.add(errorMessageLabel);
+	}
+
+	private void inithomeButton() {	
+		homeButton = new JButton("Back to Home");
+		homeButton.setBounds(205, 180, 200, 35);
+		homeButton.addActionListener(this);
+		this.add(homeButton);
+	}
+
+
+	private void initgetAmount() {
+		amount = new JLabel("Amount: $");
+		amount.setBounds(100, 100, 95, 35);
+		amount.setLabelFor(damount);
+		amount.setFont(new Font("DialogInput", Font.BOLD, 14));
+		damount = new JTextField(20);
+		damount.setBounds(205, 100, 200, 35);
+		this.add(amount);
+		this.add(damount);
+	}
+
+	public void initWithdrawButton() {
+		WithdrawButton = new JButton("Withdraw");
+		WithdrawButton.setBounds(126, 360, 248, 35);
+		WithdrawButton.addActionListener(this);
+		this.add(WithdrawButton);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		Object source = e.getSource();
+		if (source.equals(homeButton)) {
+			manager.switchTo(ATM.HOME_VIEW);
+		} 
+
+		else if (source.equals(WithdrawButton)) {
+			double amount = Double.parseDouble(damount.getText());
+			if(amount >= 0.01 && !Double.isNaN(amount)) {
+				manager.withdraw(amount);
+			}
+			else {
+				System.err.println("ERROR: input an amount that is greater than $0");
+			}
+		}
+	}
 }
